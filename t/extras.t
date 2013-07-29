@@ -1,0 +1,29 @@
+use Test::Effects;
+use 5.010;
+
+plan tests => 2;
+
+use lib 'tlib';
+
+subtest 'fail --> extra handler used', sub {
+    use ExtrasModule errors => 'squawk';
+
+    effects_ok { ExtrasModule::dont_succeed() }
+               VERBOSE {
+                    return => 'squawk!',
+                    warn   => qr{\A \QSquawked as expected\E }xms,
+                }
+               => 'Extra handler installed and called';
+};
+
+
+subtest 'fail --> extra handler unused', sub {
+    use ExtrasModule;
+
+    effects_ok { ExtrasModule::dont_succeed() }
+               VERBOSE {
+                    die   => qr{\A \QDidn't succeed\E }xms,
+                }
+               => 'Extra handler installed and called';
+};
+
