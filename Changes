@@ -8,3 +8,9 @@ Revision history for Lexical-Failure
 
 0.000002  Mon Jul 29 07:32:42 2013
           No changes logged
+
+
+0.000003  Mon Jul 29 07:41:50 2013
+
+    - Reformatted test modules to make them invisible to CPAN indexer
+

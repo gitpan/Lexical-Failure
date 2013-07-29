@@ -1,4 +1,5 @@
-package AliasModule;
+package
+AliasModule;
 our $VERSION = '0.000001';
 
 use 5.014;

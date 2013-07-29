@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Lexical-Failure
-version:            0.000002
+version:            0.000003
 abstract:           User-selectable lexically-scoped failure signaling
 author:
     - Damian Conway <DCONWAY@CPAN.org>

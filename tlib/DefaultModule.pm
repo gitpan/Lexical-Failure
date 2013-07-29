@@ -1,4 +1,5 @@
-package TestModule;
+package
+TestModule;
 our $VERSION = '0.000001';
 
 use 5.014;

@@ -9,7 +9,7 @@ use Keyword::Simple;
 
 use Lexical::Failure::Objects;
 
-our $VERSION = '0.000002';
+our $VERSION = '0.000003';
 
 # Be invisible to Carp...
 our @CARP_NOT = __PACKAGE__;
@@ -203,7 +203,8 @@ sub fail {
     my $context = want_at(UP SUB);
 
     # Ignore this code when croaking/carping from a handler
-    package Carp;
+    package
+    Carp;
     use Scope::Upper qw< unwind UP SUB>;
 
     # Simulate a return...
@@ -316,7 +317,7 @@ Lexical::Failure - User-selectable lexically-scoped failure signaling
 
 =head1 VERSION
 
-This document describes Lexical::Failure version 0.000002
+This document describes Lexical::Failure version 0.000003
 
 
 =head1 SYNOPSIS
