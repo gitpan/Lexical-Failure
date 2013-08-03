@@ -9,7 +9,7 @@ use Keyword::Simple;
 
 use Lexical::Failure::Objects;
 
-our $VERSION = '0.000003';
+our $VERSION = '0.000004';
 
 # Be invisible to Carp...
 our @CARP_NOT = __PACKAGE__;
@@ -317,7 +317,7 @@ Lexical::Failure - User-selectable lexically-scoped failure signaling
 
 =head1 VERSION
 
-This document describes Lexical::Failure version 0.000003
+This document describes Lexical::Failure version 0.000004
 
 
 =head1 SYNOPSIS

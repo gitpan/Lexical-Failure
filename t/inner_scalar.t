@@ -1,13 +1,16 @@
-use Test::Effects tests => 10;
-use 5.010;
+use Test::Effects tests => 13;
+use warnings;
+use 5.014;
 
 use lib 'tlib';
 
 my $warned;
 
 sub _check_warning {
-
-    like "@_", qr{\A Lexical \s \S+ \Q used as failure handler may not stay shared at runtime\E}x
+    no warnings 'uninitialized';
+    like "@_", qr{ \A Variable \s \S+ \s \Qis not available\E
+                 | \A Lexical \s \S+ \s \Qused as failure handler may not stay shared at runtime\E
+                 }x
         => 'Warned as expected at line ' . (caller 4)[2];
 
     $warned = 1;
@@ -25,7 +28,7 @@ BEGIN { $SIG{__WARN__} = \&_check_warning; }
         BEGIN{ if (!$warned) { fail 'Did not warn as expected' } ok $warned => 'Warning given'; $warned = 0 }
 
         effects_ok { TestModule::dont_succeed() }
-                { return => undef }
+                   { return => undef }
                 => 'Correct effects';
 
         is $errmsg, undef() => 'Failed to bind, as expected';
@@ -49,15 +52,15 @@ BEGIN { $SIG{__WARN__} = \&_check_warning; }
     };
 }
 
-BEGIN { $SIG{__WARN__} = sub { fail "Warned unexpectedly: @_"; } }
+BEGIN { $SIG{__WARN__} = sub { _check_warning(@_) } }
 
 # Note: ideally the following would also warn when inner array used, but
 # there doesn't seem to be any way to actually detect the problem. :-(
 {
     subtest 'fail --> my inner array', sub {
         plan tests => 2;
-
         my @errmsg;
+
         use TestModule errors => \@errmsg;
 
         effects_ok { TestModule::dont_succeed() }

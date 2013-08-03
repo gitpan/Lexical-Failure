@@ -1,5 +1,5 @@
 use Test::Effects;
-use 5.010;
+use 5.014;
 use Carp;
 
 plan tests => 3;

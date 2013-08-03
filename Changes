@@ -14,3 +14,9 @@ Revision history for Lexical-Failure
 
     - Reformatted test modules to make them invisible to CPAN indexer
 
+
+
+0.000004  Fri Aug  2 18:49:10 2013
+
+    - Fixed 'make test' bug
+      (Many thanks, Doran and Vincent!)
