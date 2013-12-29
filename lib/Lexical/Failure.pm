@@ -9,7 +9,7 @@ use Keyword::Simple;
 
 use Lexical::Failure::Objects;
 
-our $VERSION = '0.000004';
+our $VERSION = '0.000005';
 
 # Be invisible to Carp...
 our @CARP_NOT = __PACKAGE__;
@@ -317,7 +317,7 @@ Lexical::Failure - User-selectable lexically-scoped failure signaling
 
 =head1 VERSION
 
-This document describes Lexical::Failure version 0.000004
+This document describes Lexical::Failure version 0.000005
 
 
 =head1 SYNOPSIS
@@ -953,12 +953,12 @@ Lexical::Failure requires no configuration files or environment variables.
 =head1 DEPENDENCIES
 
 Requires the modules:
-L<"Scope::Upper">,
-L<"Keyword::Simple">,
-L<"PadWalker">, and
-L<"Test::Effects">.
+L<Scope::Upper>,
+L<Keyword::Simple>,
+L<PadWalker>, and
+L<Test::Effects>.
 
-Also requires the L<"Lexical::Failure::Objects"> helper module
+Also requires the L<Lexical::Failure::Objects> helper module
 included in its distribution.
 
 

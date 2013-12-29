@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Lexical-Failure
-version:            0.000004
+version:            0.000005
 abstract:           User-selectable lexically-scoped failure signaling
 author:
     - Damian Conway <DCONWAY@CPAN.org>
@@ -12,7 +12,7 @@ build_requires:
     ExtUtils::MakeMaker:  0
 requires:
     Hash::Util::FieldHash:  0
-    Keyword::Simple:      0
+    Keyword::Simple:      0.02
     PadWalker:            0
     perl:                 5.014
     Scope::Upper:         0

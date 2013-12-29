@@ -20,3 +20,10 @@ Revision history for Lexical-Failure
 
     - Fixed 'make test' bug
       (Many thanks, Doran and Vincent!)
+
+
+0.000005  Mon Dec 30 08:23:01 2013
+
+    - Fixed POD linking bugs (thanks, Darin!)
+    - Undid workarounds for out-by-one line-number errors
+      in Keyword::Simple v0.01 (now require v0.02)

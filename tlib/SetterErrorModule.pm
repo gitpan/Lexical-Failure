@@ -13,7 +13,7 @@ sub import {
     ON_FAILURE($errors);
 }
 
-our $CROAK_LINE = __FILE__ . ' line ' . (__LINE__ + 3);   # Keywords introduce an OB1 line reporting error
+our $CROAK_LINE = __FILE__ . ' line ' . (__LINE__ + 2);
 sub dont_succeed {
     ON_FAILURE('carp');
 

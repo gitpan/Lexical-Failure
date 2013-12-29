@@ -15,7 +15,7 @@ WriteMakefile(
         'Test::Effects'         => 0,
         'Scope::Upper'          => 0,
         'PadWalker'             => 0,
-        'Keyword::Simple'       => 0,
+        'Keyword::Simple'       => 0.02,
         'Hash::Util::FieldHash' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

@@ -18,7 +18,7 @@ sub import {
 
 sub dont_succeed {
 
-    $DIE_LINE = __FILE__ . ' line ' . (__LINE__ + 2);  # Keywords introduce and OB1 line reporting error
+    $DIE_LINE = __FILE__ . ' line ' . (__LINE__ + 1);
     error "Didn't succeed";
 
     return 'This value should never be returned';
