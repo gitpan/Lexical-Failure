@@ -20,10 +20,12 @@ subtest 'fail --> extra handler used', sub {
 subtest 'fail --> extra handler unused', sub {
     use ExtrasModule;
 
-    effects_ok { ExtrasModule::dont_succeed() }
-               VERBOSE {
-                    die   => qr{\A \QDidn't succeed\E }xms,
-                }
-               => 'Extra handler installed and called';
+    eval { ExtrasModule::dont_succeed() };
+    like $@, qr{\A \QDidn't succeed\E }xms => 'Extra handler installed and called';
+#    effects_ok { ExtrasModule::dont_succeed() }
+#               VERBOSE {
+#                    die   => qr{\A \QDidn't succeed\E }xms,
+#                }
+#               => 'Extra handler installed and called';
 };
 

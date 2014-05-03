@@ -48,7 +48,7 @@ BEGIN { $SIG{__WARN__} = \&_check_warning; }
                 { return => undef }
                 => 'Correct effects';
 
-        ok ref($errmsg) ne 'HASH' || !keys $errmsg => 'Failed to bind, as expected';
+        ok ref($errmsg) ne 'HASH' || !keys %$errmsg => 'Failed to bind, as expected';
     };
 }
 

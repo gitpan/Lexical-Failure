@@ -9,27 +9,33 @@ use lib 'tlib';
     use AliasModule;
 
     my $CROAK_LINE = __FILE__ . ' line ' . (__LINE__ + 1);
-    effects_ok { AliasModule::dont_succeed() }
-               { die => qr{\A \QDidn't succeed at $CROAK_LINE\E }xms }
-               => 'fail --> default';
+    eval { AliasModule::dont_succeed() };
+    like $@, qr{\A \QDidn't succeed at $CROAK_LINE\E }xms => 'fail --> default';
+#    effects_ok { AliasModule::dont_succeed() }
+#               { die => qr{\A \QDidn't succeed at $CROAK_LINE\E }xms }
+#               => 'fail --> default';
 };
 
 {
     use AliasModule errors => 'croak';
 
     my $CROAK_LINE = __FILE__ . ' line ' . (__LINE__ + 1);
-    effects_ok { AliasModule::dont_succeed() }
-               { die => qr{\A \QDidn't succeed at $CROAK_LINE\E }xms }
-               => 'fail --> croak';
+    eval { AliasModule::dont_succeed() };
+    like $@, qr{\A \QDidn't succeed at $CROAK_LINE\E }xms => 'fail --> croak';
+#    effects_ok { AliasModule::dont_succeed() }
+#               { die => qr{\A \QDidn't succeed at $CROAK_LINE\E }xms }
+#               => 'fail --> croak';
 };
 
 {
     use AliasModule errors => 'confess';
 
     my $CROAK_LINE = __FILE__ . ' line ' . (__LINE__ + 1);
-    effects_ok { AliasModule::dont_succeed() }
-               { die => qr{\QAliasModule::dont_succeed() called at $CROAK_LINE\E}xms }
-               => 'fail --> confess';
+    eval { AliasModule::dont_succeed() };
+    like $@, qr{\QAliasModule::dont_succeed() called at $CROAK_LINE\E}xms => 'fail --> confess';
+#    effects_ok { AliasModule::dont_succeed() }
+#               { die => qr{\QAliasModule::dont_succeed() called at $CROAK_LINE\E}xms }
+#               => 'fail --> confess';
 };
 
 {

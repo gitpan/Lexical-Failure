@@ -1,43 +1,50 @@
 use Test::Effects;
 use 5.014;
 
-
 plan tests => 14;
 
 use lib 'tlib';
 
 {
     my $CROAK_LINE = __FILE__ . ' line ' . (__LINE__ + 1);
-    effects_ok { TestModule::dont_succeed() }
-               { die => qr{\A \QDidn't succeed at $CROAK_LINE\E }xms }
-               => 'fail --> default';
+    eval{ TestModule::dont_succeed() };
+    like $@, qr{\A \QDidn't succeed at $CROAK_LINE\E }xms => 'fail --> default';
+#    effects_ok { TestModule::dont_succeed() }
+#               { die => qr{\A \QDidn't succeed at $CROAK_LINE\E }xms }
+#               => 'fail --> default';
 };
 
 {
     use TestModule errors => undef;
-    
+
     my $CROAK_LINE = __FILE__ . ' line ' . (__LINE__ + 1);
-    effects_ok { TestModule::dont_succeed() }
-               { die => qr{\A \QDidn't succeed at $CROAK_LINE\E }xms }
-               => 'fail --> no arg == no change';
+    eval{ TestModule::dont_succeed() };
+    like $@, qr{\A \QDidn't succeed at $CROAK_LINE\E }xms => 'fail --> no arg == no change';
+#    effects_ok { TestModule::dont_succeed() }
+#               { die => qr{\A \QDidn't succeed at $CROAK_LINE\E }xms }
+#               => 'fail --> no arg == no change';
 };
 
 {
     use TestModule errors => 'croak';
 
     my $CROAK_LINE = __FILE__ . ' line ' . (__LINE__ + 1);
-    effects_ok { TestModule::dont_succeed() }
-               { die => qr{\A \QDidn't succeed at $CROAK_LINE\E }xms }
-               => 'fail --> croak';
+    eval{ TestModule::dont_succeed() };
+    like $@, qr{\A \QDidn't succeed at $CROAK_LINE\E }xms => 'fail --> croak';
+#    effects_ok { TestModule::dont_succeed() }
+#               { die => qr{\A \QDidn't succeed at $CROAK_LINE\E }xms }
+#               => 'fail --> croak';
 };
 
 {
     use TestModule errors => 'confess';
 
     my $CROAK_LINE = __FILE__ . ' line ' . (__LINE__ + 1);
-    effects_ok { TestModule::dont_succeed() }
-               { die => qr{\QTestModule::dont_succeed() called at $CROAK_LINE\E}xms }
-               => 'fail --> confess';
+    eval{ TestModule::dont_succeed() };
+    like $@, qr{\QTestModule::dont_succeed() called at $CROAK_LINE\E}xms => 'fail --> confess';
+#    effects_ok { TestModule::dont_succeed() }
+#               { die => qr{\QTestModule::dont_succeed() called at $CROAK_LINE\E}xms }
+#               => 'fail --> confess';
 };
 
 {

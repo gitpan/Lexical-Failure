@@ -9,7 +9,7 @@ use Keyword::Simple;
 
 use Lexical::Failure::Objects;
 
-our $VERSION = '0.000005';
+our $VERSION = '0.000006';
 
 # Be invisible to Carp...
 our @CARP_NOT = __PACKAGE__;
@@ -317,7 +317,7 @@ Lexical::Failure - User-selectable lexically-scoped failure signaling
 
 =head1 VERSION
 
-This document describes Lexical::Failure version 0.000005
+This document describes Lexical::Failure version 0.000006
 
 
 =head1 SYNOPSIS
@@ -361,7 +361,7 @@ This document describes Lexical::Failure version 0.000005
 
 This module sets up two new keywords: C<fail> and C<ON_FAILURE>,
 with which you can quickly create modules whose failure signaling
-is lexcially scoped, under the control of client code.
+is lexicially scoped, under the control of client code.
 
 Normally, modules specify some fixed mechanism for error handling and
 require client code to adapt to that policy. One module may signal

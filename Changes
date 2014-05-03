@@ -27,3 +27,11 @@ Revision history for Lexical-Failure
     - Fixed POD linking bugs (thanks, Darin!)
     - Undid workarounds for out-by-one line-number errors
       in Keyword::Simple v0.01 (now require v0.02)
+
+
+0.000006  Sat May  3 10:59:58 2014
+
+    - Fixed documentation typos (thanks, Laurent)
+
+    - Coded around mysterious problems with Test::Effects under 5.19+
+      (thanks Slaven!)
