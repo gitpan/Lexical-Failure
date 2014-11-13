@@ -1,4 +1,4 @@
-use Test::Effects tests => 13;
+use Test::Effects tests => 15;
 use warnings;
 use 5.014;
 
@@ -8,10 +8,15 @@ my $warned;
 
 sub _check_warning {
     no warnings 'uninitialized';
-    like "@_", qr{ \A Variable \s \S+ \s \Qis not available\E
-                 | \A Lexical \s \S+ \s \Qused as failure handler may not stay shared at runtime\E
-                 }x
-        => 'Warned as expected at line ' . (caller 4)[2];
+    my $warning = "@_" =~ qr{ \A (Variable \s \S+) \s \Qis not available\E }x;
+    my $line = '???';
+    for my $upscope (0..100) {
+        if (caller($upscope) eq 'main') {
+            $line = (caller $upscope)[2];
+            last;
+        }
+    }
+    ok $warning => "Warned ($+) as expected at line $line";
 
     $warned = 1;
 }
@@ -23,9 +28,7 @@ BEGIN { $SIG{__WARN__} = \&_check_warning; }
         plan tests => 2;
 
         my $errmsg;
-        use TestModule errors => \$errmsg;
-
-        BEGIN{ if (!$warned) { fail 'Did not warn as expected' } ok $warned => 'Warning given'; $warned = 0 }
+        use TestModule errors => \$errmsg; BEGIN{ if (!$warned) { fail 'Did not warn as expected' } ok $warned => 'Warning given at line '.__LINE__; $warned = 0 }
 
         effects_ok { TestModule::dont_succeed() }
                    { return => undef }
@@ -40,9 +43,7 @@ BEGIN { $SIG{__WARN__} = \&_check_warning; }
         plan tests => 2;
 
         my $errmsg;
-        use TestModule errors => ($errmsg = {});
-
-        BEGIN{ if (!$warned) { fail 'Did not warn as expected' } ok $warned => 'Warning given'; $warned = 0 }
+        use TestModule errors => ($errmsg = {}); BEGIN{ if (!$warned) { fail 'Did not warn as expected' } ok $warned => 'Warning given at line '.__LINE__; $warned = 0 }
 
         effects_ok { TestModule::dont_succeed() }
                 { return => undef }
@@ -52,22 +53,18 @@ BEGIN { $SIG{__WARN__} = \&_check_warning; }
     };
 }
 
-BEGIN { $SIG{__WARN__} = sub { _check_warning(@_) } }
-
-# Note: ideally the following would also warn when inner array used, but
-# there doesn't seem to be any way to actually detect the problem. :-(
 {
     subtest 'fail --> my inner array', sub {
         plan tests => 2;
         my @errmsg;
 
-        use TestModule errors => \@errmsg;
+        use TestModule errors => \@errmsg; BEGIN{ if (!$warned) { fail 'Did not warn as expected' } ok $warned => 'Warning given at line '.__LINE__; $warned = 0 }
 
         effects_ok { TestModule::dont_succeed() }
                 { return => undef }
                 => 'Correct effects';
 
-        ok !@errmsg => 'Failed to bind, as expected';
+        is_deeply \@errmsg, [] => 'Failed to bind, as expected';
     };
 }
 
@@ -77,7 +74,7 @@ my $outer_var;
 {
     subtest 'fail --> my outer scalar', sub {
         plan tests => 2;
-        use TestModule errors => \$outer_var;
+        use TestModule errors => \$outer_var; BEGIN{ ok !$warned => 'No unexpected warning at line '.__LINE__; $warned = 0 }
 
         effects_ok { TestModule::dont_succeed() }
                 { return => undef }
@@ -92,7 +89,7 @@ my $outer_var;
     subtest 'fail --> our package scalar', sub {
         plan tests => 2;
         our $error;
-        use TestModule errors => \$error;
+        use TestModule errors => \$error; BEGIN{ ok !$warned => 'No unexpected warning at line '.__LINE__; $warned = 0 }
 
         effects_ok { TestModule::dont_succeed() }
                 { return => undef }
@@ -107,7 +104,7 @@ my $outer_var;
     subtest 'fail --> qualified package scalar', sub {
         plan tests => 2;
 
-        use TestModule errors => \$Other::var;
+        use TestModule errors => \$Other::var; BEGIN{ ok !$warned => 'No unexpected warning at line '.__LINE__; $warned = 0 }
 
         effects_ok { TestModule::dont_succeed() }
                 { return => undef }
@@ -117,3 +114,5 @@ my $outer_var;
                     => 'Successfully bound, as expected';
     };
 }
+
+done_testing();

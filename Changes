@@ -35,3 +35,10 @@ Revision history for Lexical-Failure
 
     - Coded around mysterious problems with Test::Effects under 5.19+
       (thanks Slaven!)
+
+
+0.000007  Thu Nov 13 16:09:17 2014
+
+    - Simplified and sharpened t/inner_scalar.t
+      which also removed the requirement for PadWalker
+      (thanks Father C!)

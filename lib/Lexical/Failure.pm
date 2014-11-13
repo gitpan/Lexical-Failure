@@ -4,12 +4,11 @@ use 5.014; use warnings;
 no if $] >= 5.018, 'warnings', "experimental";
 use Scope::Upper qw< want_at unwind uplevel UP SUB CALLER >;
 use Carp qw< carp croak confess cluck >;
-use PadWalker qw< peek_my peek_our var_name >;
 use Keyword::Simple;
 
 use Lexical::Failure::Objects;
 
-our $VERSION = '0.000006';
+our $VERSION = '0.000007';
 
 # Be invisible to Carp...
 our @CARP_NOT = __PACKAGE__;
@@ -161,7 +160,7 @@ sub ON_FAILURE {
         }
 
         my $target_var = $handler;
-        _check_scoping_of($target_var);
+        # _check_scoping_of($target_var); # Experimentally removed (may not be necessary)
 
         # Scalars are simply assigned to...
         when ('SCALAR') {
@@ -214,50 +213,53 @@ sub fail {
             ) => UP SUB;
 }
 
-sub _check_scoping_of {
-    my ($target_var) = @_;
-
-    # Is this something we can check???
-    my $var_type = ref $target_var;
-    return if $var_type !~ m{\A (?: SCALAR | ARRAY | HASH  ) \z}x;
-
-    # Look up the potential variables it could be...
-    my %vars = ( %{peek_our(3)}, %{peek_my(3)} );
-
-    # If it isn't any of them, warn us...
-    if (!grep { $vars{$_} == $target_var } keys %vars) {
-        return if _is_package_var($target_var);
-
-        cluck 'Lexical ' . lc($var_type) . ' used as failure handler may not stay shared at runtime';
-    }
-}
-
-sub _is_package_var {
-    my ($target_ref) = @_;
-
-    my @packages = ('main');
-    my %seen;
-
-    while (my $package = shift @packages) {
-        no strict;
-        while (($name, $entry) = each(%{*{"$package\::"}})) {
-            local(*ENTRY) = $entry // next;
-
-            # Check for match...
-            return 1 if defined *ENTRY{SCALAR} && *ENTRY{SCALAR} == $target_ref
-                     || defined *ENTRY{ARRAY}  && *ENTRY{ARRAY}  == $target_ref
-                     || defined *ENTRY{HASH}   && *ENTRY{HASH}   == $target_ref;
-
-            # Check down tree...
-            if (defined *ENTRY{HASH} && $name =~ m{ (?<child> .* ) :: \z }xms) {
-                next if $seen{$+{child}}++;
-                push @packages, $+{child};
-            }
-        }
-    }
-
-    return 0;
-}
+# (Experimentally remove these checks as they may not be necessary...or reliable)
+#
+#sub _check_scoping_of {
+#    my ($target_var) = @_;
+#
+#    # Is this something we can check???
+#    my $var_type = ref $target_var;
+#    return if $var_type !~ m{\A (?: SCALAR | ARRAY | HASH  ) \z}x;
+#
+#    # Look up the potential variables it could be...
+#    use PadWalker qw< peek_my peek_our var_name >;
+#    my %vars = ( %{peek_our(3)}, %{peek_my(3)} );
+#
+#    # If it isn't any of them, warn us...
+#    if (!grep { $vars{$_} == $target_var } keys %vars) {
+#        return if _is_package_var($target_var);
+#
+#        cluck 'Lexical ' . lc($var_type) . ' used as failure handler may not stay shared at runtime';
+#    }
+#}
+#
+#sub _is_package_var {
+#    my ($target_ref) = @_;
+#
+#    my @packages = ('main');
+#    my %seen;
+#
+#    while (my $package = shift @packages) {
+#        no strict;
+#        while (($name, $entry) = each(%{*{"$package\::"}})) {
+#            local(*ENTRY) = $entry // next;
+#
+#            # Check for match...
+#            return 1 if defined *ENTRY{SCALAR} && *ENTRY{SCALAR} == $target_ref
+#                     || defined *ENTRY{ARRAY}  && *ENTRY{ARRAY}  == $target_ref
+#                     || defined *ENTRY{HASH}   && *ENTRY{HASH}   == $target_ref;
+#
+#            # Check down tree...
+#            if (defined *ENTRY{HASH} && $name =~ m{ (?<child> .* ) :: \z }xms) {
+#                next if $seen{$+{child}}++;
+#                push @packages, $+{child};
+#            }
+#        }
+#    }
+#
+#    return 0;
+#}
 
 # Locate hints hash of first scope outside caller (if any)...
 sub _find_callers_handler {
@@ -317,7 +319,7 @@ Lexical::Failure - User-selectable lexically-scoped failure signaling
 
 =head1 VERSION
 
-This document describes Lexical::Failure version 0.000006
+This document describes Lexical::Failure version 0.000007
 
 
 =head1 SYNOPSIS
